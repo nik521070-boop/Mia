@@ -7,276 +7,294 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Prata&family=Ysabeau+Infant:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  /* Керамика и бумага: кремовая глина, кобальтовая глазурь, селадон */
+  /* Тёплый крем, матовое стекло, оранжевое «солнце», жемчужные шары */
   :root {
-    --clay: #EFE7DC;          /* фон: неглазурованная глина */
-    --glaze: #FAF6F0;         /* карточки: белая глазурь */
-    --groove: #E2D8CB;        /* бороздки и вдавленные поля */
-    --ink: #2B2724;
-    --muted: #8E8478;
-    --cobalt: #2F4BB8;        /* акцент: кобальтовая глазурь */
-    --cobalt-2: #5B75DE;
-    --celadon: #DCE6D6;       /* её сообщения */
-    --celadon-ink: #2F3B2C;
-    --out: #FAF6F0;           /* его сообщение */
-    --hi: rgba(255, 255, 255, .75);
-    --lo: rgba(92, 70, 48, .14);
-    --grain-opacity: .35;
+    --bg-1: #F3EBE3;
+    --bg-2: #E8DCCF;
+    --ink: #1D1B19;
+    --muted: #8E857B;
+    --glass: rgba(255, 255, 255, .42);
+    --glass-edge: rgba(255, 255, 255, .7);
+    --pill: rgba(255, 255, 255, .55);
+    --card: #FFFFFF;
+    --panel: #F5F1ED;
+    --dark: #1E1D1C;
+    --on-dark: #F5F1ED;
+    --on-dark-muted: #8F8A84;
+    --sun-1: #FFC08A;
+    --sun-2: #F2843A;
+    --line: rgba(29, 27, 25, .12);
+    --shadow: 0 20px 50px -24px rgba(90, 60, 30, .35);
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --clay: #1A1816; --glaze: #24211E; --groove: #151311; --ink: #F1EBE2; --muted: #A1968A;
-      --cobalt: #7F96F5; --cobalt-2: #A3B4FA; --celadon: #2B3529; --celadon-ink: #DCE6D6; --out: #2E2A26;
-      --hi: rgba(255, 255, 255, .06); --lo: rgba(0, 0, 0, .45); --grain-opacity: .18;
+      --bg-1: #1B1917; --bg-2: #141210; --ink: #F3EEE8; --muted: #9A9188;
+      --glass: rgba(255, 255, 255, .07); --glass-edge: rgba(255, 255, 255, .12); --pill: rgba(255, 255, 255, .09);
+      --card: #24211F; --panel: #2D2926; --dark: #F3EEE8; --on-dark: #1D1B19; --on-dark-muted: #6F6862;
+      --line: rgba(255, 255, 255, .14); --shadow: 0 20px 50px -24px rgba(0, 0, 0, .7);
     }
   }
   :root[data-theme="dark"] {
-    --clay: #1A1816; --glaze: #24211E; --groove: #151311; --ink: #F1EBE2; --muted: #A1968A;
-    --cobalt: #7F96F5; --cobalt-2: #A3B4FA; --celadon: #2B3529; --celadon-ink: #DCE6D6; --out: #2E2A26;
-    --hi: rgba(255, 255, 255, .06); --lo: rgba(0, 0, 0, .45); --grain-opacity: .18;
+    --bg-1: #1B1917; --bg-2: #141210; --ink: #F3EEE8; --muted: #9A9188;
+    --glass: rgba(255, 255, 255, .07); --glass-edge: rgba(255, 255, 255, .12); --pill: rgba(255, 255, 255, .09);
+    --card: #24211F; --panel: #2D2926; --dark: #F3EEE8; --on-dark: #1D1B19; --on-dark-muted: #6F6862;
+    --line: rgba(255, 255, 255, .14); --shadow: 0 20px 50px -24px rgba(0, 0, 0, .7);
   }
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin: 0; background: var(--clay); color: var(--ink); }
+  html, body { margin: 0; color: var(--ink); background: var(--bg-1); }
   body {
-    font: 500 17px/1.5 "Ysabeau Infant", system-ui, sans-serif;
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-    position: relative;
+    font: 400 16px/1.45 "Jost", system-ui, sans-serif;
+    min-height: 100vh; -webkit-font-smoothing: antialiased; overflow-x: hidden;
   }
-  /* Зерно бумаги */
-  body::before {
-    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: var(--grain-opacity);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .36 0 0 0 0 .27 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    mix-blend-mode: multiply;
+  /* Фон: тёплый градиент и размытое солнце */
+  .backdrop { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(170deg, var(--bg-1) 0%, var(--bg-2) 100%); }
+  .sun {
+    position: absolute; width: 340px; height: 340px; border-radius: 50%; right: -110px; top: 34%;
+    background: radial-gradient(circle at 40% 40%, var(--sun-1), var(--sun-2) 70%);
+    filter: blur(46px); opacity: .75; transition: transform 1.2s cubic-bezier(.2, .8, .2, 1);
   }
-  .app { position: relative; z-index: 1; max-width: 460px; margin: 0 auto; padding: 22px 16px calc(120px + env(safe-area-inset-bottom)); }
+  .sun.small { width: 200px; height: 200px; left: -80px; right: auto; top: 6%; opacity: .35; filter: blur(60px); }
 
-  header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 34px; }
-  .wordmark { font: 400 28px/1 "Prata", serif; letter-spacing: -.01em; }
-  .wordmark b { font-weight: 400; color: var(--cobalt); }
-  .steps { display: flex; gap: 8px; }
-  .steps i {
-    width: 9px; height: 9px; border-radius: 50%; background: var(--groove);
-    box-shadow: inset 0 1px 2px var(--lo); transition: all .4s cubic-bezier(.3, 1.4, .5, 1);
-  }
-  .steps i.on { background: var(--cobalt); box-shadow: inset 0 -1px 1px rgba(0,0,0,.2), 0 0 0 3px color-mix(in srgb, var(--cobalt) 18%, transparent); }
+  .app { position: relative; z-index: 1; max-width: 460px; margin: 0 auto; padding: 20px 16px calc(120px + env(safe-area-inset-bottom)); }
 
-  h1 { font: 400 34px/1.08 "Prata", serif; letter-spacing: -.015em; margin: 0 0 12px; }
-  .lead { color: var(--muted); margin: 0 0 30px; font-size: 17px; }
+  header { display: flex; align-items: center; justify-content: space-between; margin: 4px 6px 22px; }
+  .brand { display: flex; align-items: center; gap: 8px; font-weight: 400; font-size: 20px; letter-spacing: .01em; color: var(--muted); }
+  .brand .mia-mark { width: 26px; height: 26px; color: var(--ink); overflow: visible; }
+  .counter { font-size: 17px; color: var(--ink); }
+  .counter span { color: var(--muted); }
 
   .screen { display: none; }
-  .screen.on { display: block; animation: rise .55s cubic-bezier(.2, .9, .3, 1) both; }
-  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .screen.on { display: block; animation: rise .6s cubic-bezier(.2, .9, .25, 1) both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(16px) scale(.99); } to { opacity: 1; transform: none; } }
 
-  /* Поля: вдавлены в глину */
-  .field { margin-bottom: 24px; }
-  .label { display: block; font-weight: 700; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px 4px; }
-  .hint { color: var(--muted); font-size: 14px; margin: 8px 0 0 4px; }
-  input[type=text], input[type=date] {
-    width: 100%; font: 600 18px "Ysabeau Infant", sans-serif; color: var(--ink);
-    background: var(--groove); border: 0; border-radius: 20px; padding: 16px 18px; min-height: 58px;
-    box-shadow: inset 0 2px 4px var(--lo), inset 0 -1px 0 var(--hi);
-    outline: none; -webkit-appearance: none; appearance: none; transition: box-shadow .25s;
+  /* Матовое стекло */
+  .glass {
+    background: var(--glass); border: 1px solid var(--glass-edge); border-radius: 34px;
+    backdrop-filter: blur(26px) saturate(140%); -webkit-backdrop-filter: blur(26px) saturate(140%);
+    box-shadow: var(--shadow); padding: 28px 22px;
   }
-  input::placeholder { color: var(--muted); opacity: .7; }
-  input:focus { box-shadow: inset 0 2px 4px var(--lo), 0 0 0 2px var(--cobalt); }
+  h1 { font-weight: 300; font-size: 40px; line-height: 1.05; letter-spacing: -.02em; margin: 0 0 10px; }
+  .lead { color: var(--muted); margin: 0 0 28px; font-size: 16px; }
+
+  /* Поля-таблетки с круглой иконкой */
+  .pill-field {
+    display: flex; align-items: center; gap: 12px; background: var(--pill); border-radius: 999px;
+    padding: 7px 8px 7px 7px; margin-bottom: 12px; border: 1px solid transparent; transition: border-color .25s, background .25s;
+  }
+  .pill-field:focus-within { border-color: var(--glass-edge); background: var(--card); }
+  .chip {
+    width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--card); display: grid; place-items: center;
+    box-shadow: 0 2px 6px -2px rgba(90, 60, 30, .25);
+  }
+  .chip svg { width: 18px; height: 18px; stroke: var(--ink); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .pill-field input {
+    flex: 1; min-width: 0; border: 0; background: transparent; outline: none; color: var(--ink);
+    font: 400 17px "Jost", sans-serif; padding: 10px 4px; -webkit-appearance: none; appearance: none;
+  }
+  .pill-field input::placeholder { color: var(--muted); }
   input[type=date]::-webkit-date-and-time-value { text-align: left; }
+  .tag { font-size: 13px; color: var(--muted); padding-right: 10px; white-space: nowrap; }
 
-  /* Выбор: глазурованные плитки, выбранная «вдавливается» */
-  .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .tiles button {
-    font: 700 17px "Ysabeau Infant", sans-serif; color: var(--ink); background: var(--glaze);
-    border: 0; border-radius: 20px; padding: 17px; cursor: pointer;
-    box-shadow: inset 0 1px 0 var(--hi), 0 1px 1px var(--lo), 0 6px 14px -6px var(--lo);
-    transition: transform .25s cubic-bezier(.3, 1.6, .5, 1), box-shadow .25s, color .25s, background .25s;
+  .choice { display: flex; gap: 8px; margin: 4px 0 12px; }
+  .choice button {
+    flex: 1; font: 400 16px "Jost", sans-serif; color: var(--ink); background: var(--pill);
+    border: 1px solid transparent; border-radius: 999px; padding: 15px 10px; cursor: pointer;
+    transition: all .3s cubic-bezier(.3, 1.4, .5, 1);
   }
-  .tiles button:active { transform: scale(.97); }
-  .tiles button.on {
-    color: var(--cobalt); background: var(--groove);
-    box-shadow: inset 0 2px 5px var(--lo), inset 0 -1px 0 var(--hi);
-  }
+  .choice button:active { transform: scale(.97); }
+  .choice button.on { background: var(--dark); color: var(--on-dark); }
+  .fineprint { font-size: 12px; line-height: 1.45; color: var(--muted); margin: 18px 6px 0; }
 
-  /* Портрет: глазурованная карточка */
-  .portrait {
-    background: var(--glaze); border-radius: 28px; padding: 22px 20px 20px; margin-bottom: 30px;
-    box-shadow: inset 0 1px 0 var(--hi), 0 1px 2px var(--lo), 0 18px 40px -18px var(--lo);
+  /* Карточка с внутренней панелью (как карточка с датой на референсе) */
+  .portrait { background: var(--card); border-radius: 34px; padding: 10px; box-shadow: var(--shadow); display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 12px; position: relative; overflow: hidden; }
+  .panel { background: var(--panel); border-radius: 26px; padding: 22px 20px 18px; position: relative; overflow: hidden; }
+  .panel .glow {
+    position: absolute; width: 230px; height: 230px; border-radius: 50%; right: -70px; bottom: -90px;
+    background: radial-gradient(circle, var(--sun-2), var(--sun-1) 45%, transparent 70%); filter: blur(30px); opacity: .55;
+    transition: transform .9s cubic-bezier(.2, .8, .2, 1);
   }
-  .who { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-  .avatar {
-    width: 44px; height: 44px; border-radius: 50%; flex: none;
-    background: radial-gradient(circle at 32% 28%, var(--cobalt-2), var(--cobalt) 62%);
-    box-shadow: inset 0 -3px 6px rgba(0,0,0,.25), inset 0 2px 3px rgba(255,255,255,.35);
-    display: grid; place-items: center; color: #fff; font: 400 20px "Prata", serif;
-  }
-  .who .meta { font-size: 14px; color: var(--muted); line-height: 1.3; }
-  .who .meta strong { display: block; color: var(--ink); font-size: 17px; font-weight: 700; }
-  .title { font: 400 30px/1.1 "Prata", serif; margin: 0 0 6px; transition: opacity .3s, filter .3s, transform .3s; }
-  .title.swap { opacity: 0; filter: blur(4px); transform: translateY(4px); }
-  .desc { color: var(--muted); font-size: 15px; margin: 0 0 18px; min-height: 45px; }
-  .chat { display: flex; flex-direction: column; gap: 4px; min-height: 168px; }
-  .msg {
-    max-width: 84%; padding: 9px 14px; border-radius: 20px; font-size: 16px; line-height: 1.35;
-    animation: bubble .4s cubic-bezier(.3, 1.5, .5, 1) both;
-  }
-  .msg.out {
-    align-self: flex-end; background: var(--out); border-bottom-right-radius: 7px; margin-bottom: 8px;
-    box-shadow: 0 1px 1px var(--lo), inset 0 1px 0 var(--hi);
-  }
-  .msg.in { align-self: flex-start; background: var(--celadon); color: var(--celadon-ink); border-bottom-left-radius: 7px; }
-  .msg.in + .msg.in { border-top-left-radius: 7px; }
-  .typing { align-self: flex-start; background: var(--celadon); border-radius: 20px; padding: 13px 16px; display: flex; gap: 5px; animation: bubble .3s ease both; }
-  .typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--celadon-ink); opacity: .35; animation: dot 1s infinite; }
+  .panel > * { position: relative; }
+  .portrait .meta { display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); margin-bottom: 14px; }
+  .portrait .meta b { font-weight: 400; color: var(--ink); }
+  .title { font-weight: 300; font-size: 44px; line-height: 1; letter-spacing: -.025em; margin: 0; transition: opacity .3s, filter .3s, transform .3s; }
+  .title.swap { opacity: 0; filter: blur(6px); transform: translateY(6px); }
+  .desc { color: var(--muted); font-size: 15px; margin: 10px 0 0; min-height: 44px; }
+
+  .chat { display: flex; flex-direction: column; gap: 5px; padding: 6px 10px 12px; min-height: 172px; }
+  .msg { max-width: 84%; padding: 9px 15px; border-radius: 22px; font-size: 15.5px; line-height: 1.35; animation: bubble .45s cubic-bezier(.3, 1.4, .5, 1) both; }
+  .msg.out { align-self: flex-end; background: var(--dark); color: var(--on-dark); margin-bottom: 8px; border-bottom-right-radius: 8px; }
+  .msg.in { align-self: flex-start; background: var(--panel); border-bottom-left-radius: 8px; }
+  .msg.in + .msg.in { border-top-left-radius: 8px; }
+  .typing { align-self: flex-start; background: var(--panel); border-radius: 22px; padding: 14px 16px; display: flex; gap: 5px; animation: bubble .3s ease both; }
+  .typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink); opacity: .3; animation: dot 1s infinite; }
   .typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
-  @keyframes dot { 0%, 60%, 100% { opacity: .25; transform: none; } 30% { opacity: .8; transform: translateY(-3px); } }
-  @keyframes bubble { from { opacity: 0; transform: scale(.9) translateY(4px); } to { opacity: 1; transform: none; } }
+  @keyframes dot { 0%, 60%, 100% { opacity: .2; transform: none; } 30% { opacity: .7; transform: translateY(-3px); } }
+  @keyframes bubble { from { opacity: 0; transform: scale(.92) translateY(4px); } to { opacity: 1; transform: none; } }
 
-  /* Ползунки: бороздка в глине и глянцевая бусина */
-  .slider { margin-bottom: 26px; }
-  .slider .ends { display: flex; justify-content: space-between; font-size: 16px; margin: 0 4px 12px; }
-  .slider .ends span { color: var(--muted); transition: color .25s; font-weight: 600; }
-  .slider .ends span.on { color: var(--ink); font-weight: 700; }
-  .track { position: relative; height: 40px; }
-  .track::before {  /* бороздка */
-    content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 12px; transform: translateY(-50%);
-    border-radius: 8px; background: var(--groove); box-shadow: inset 0 2px 3px var(--lo), inset 0 -1px 0 var(--hi);
-  }
-  .track .fill {
-    position: absolute; left: 0; top: 50%; height: 12px; transform: translateY(-50%); border-radius: 8px;
-    background: linear-gradient(to bottom, var(--cobalt-2), var(--cobalt));
-    box-shadow: inset 0 1px 1px rgba(255,255,255,.3); pointer-events: none;
-  }
-  .track .ticks { position: absolute; left: 14px; right: 14px; top: calc(50% + 14px); display: flex; justify-content: space-between; pointer-events: none; }
-  .track .ticks i { width: 3px; height: 3px; border-radius: 50%; background: var(--muted); opacity: .35; }
-  input[type=range] {
-    position: absolute; inset: 0; width: 100%; height: 40px; margin: 0; background: transparent;
-    -webkit-appearance: none; appearance: none; cursor: pointer;
-  }
-  input[type=range]::-webkit-slider-runnable-track { height: 40px; background: transparent; }
-  input[type=range]::-moz-range-track { height: 40px; background: transparent; }
+  /* Ползунки: тонкая линия и жемчужный шар */
+  .sliders { padding: 26px 22px 8px; }
+  .slider { margin-bottom: 24px; }
+  .slider .ends { display: flex; justify-content: space-between; font-size: 15px; margin: 0 2px 6px; }
+  .slider .ends span { color: var(--muted); transition: color .25s; }
+  .slider .ends span.on { color: var(--ink); }
+  .track { position: relative; height: 44px; }
+  .track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; transform: translateY(-50%); background: var(--line); border-radius: 2px; }
+  .track .fill { position: absolute; left: 0; top: 50%; height: 2px; transform: translateY(-50%); background: linear-gradient(90deg, var(--sun-1), var(--sun-2)); border-radius: 2px; pointer-events: none; }
+  input[type=range] { position: absolute; inset: 0; width: 100%; height: 44px; margin: 0; background: transparent; -webkit-appearance: none; appearance: none; cursor: pointer; }
+  input[type=range]::-webkit-slider-runnable-track { height: 44px; background: transparent; }
+  input[type=range]::-moz-range-track { height: 44px; background: transparent; }
   input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 30px; height: 30px; margin-top: 5px; border-radius: 50%;
-    background: radial-gradient(circle at 34% 28%, #fff 0, var(--cobalt-2) 22%, var(--cobalt) 70%);
-    box-shadow: inset 0 -3px 5px rgba(0,0,0,.28), 0 2px 3px var(--lo), 0 8px 16px -6px var(--cobalt);
-    transition: transform .3s cubic-bezier(.3, 1.6, .5, 1);
+    -webkit-appearance: none; width: 34px; height: 34px; margin-top: 5px; border-radius: 50%;
+    background: radial-gradient(circle at 36% 28%, #FFFFFF 0 30%, #F3EEE9 55%, #F6B27C 88%, #F08A42 100%);
+    box-shadow: 0 10px 18px -8px rgba(240, 132, 58, .7), 0 2px 4px rgba(90, 60, 30, .18);
+    transition: transform .35s cubic-bezier(.3, 1.6, .5, 1);
   }
-  input[type=range]:active::-webkit-slider-thumb { transform: scale(1.18); }
+  input[type=range]:active::-webkit-slider-thumb { transform: scale(1.16); }
   input[type=range]::-moz-range-thumb {
-    width: 30px; height: 30px; border: 0; border-radius: 50%;
-    background: radial-gradient(circle at 34% 28%, #fff 0, var(--cobalt-2) 22%, var(--cobalt) 70%);
-    box-shadow: inset 0 -3px 5px rgba(0,0,0,.28), 0 8px 16px -6px var(--cobalt);
+    width: 34px; height: 34px; border: 0; border-radius: 50%;
+    background: radial-gradient(circle at 36% 28%, #FFFFFF 0 30%, #F3EEE9 55%, #F6B27C 88%, #F08A42 100%);
+    box-shadow: 0 10px 18px -8px rgba(240, 132, 58, .7);
   }
   input[type=range]:focus-visible { outline: none; }
-  input[type=range]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px color-mix(in srgb, var(--cobalt) 30%, transparent); }
 
-  .note {
-    font-size: 15px; color: var(--muted); background: var(--groove); border-radius: 18px; padding: 14px 16px;
-    box-shadow: inset 0 1px 3px var(--lo);
-  }
+  /* Чёрная карточка-акцент */
+  .dark-card { background: var(--dark); color: var(--on-dark); border-radius: 30px; padding: 22px 22px 20px; margin-top: 12px; }
+  .dark-card .big { font-weight: 300; font-size: 26px; line-height: 1.1; }
+  .dark-card .sub { color: var(--on-dark-muted); font-size: 15px; margin-top: 6px; }
 
-  /* Своя кнопка — только вне Telegram (в Telegram родная MainButton) */
-  .fallback-btn {
-    display: none; position: fixed; left: 16px; right: 16px; bottom: calc(18px + env(safe-area-inset-bottom)); z-index: 2;
-    max-width: 428px; margin: 0 auto; font: 700 18px "Ysabeau Infant", sans-serif; color: #fff;
-    background: linear-gradient(to bottom, var(--cobalt-2), var(--cobalt)); border: 0; border-radius: 22px; padding: 18px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 10px 24px -8px var(--cobalt); cursor: pointer;
-    transition: transform .25s cubic-bezier(.3, 1.6, .5, 1), opacity .25s;
+  /* Кнопка: чёрная таблетка со сросшимся кругом «›» */
+  .cta {
+    position: fixed; left: 0; right: 0; bottom: calc(18px + env(safe-area-inset-bottom)); z-index: 3;
+    display: flex; justify-content: center; pointer-events: none;
   }
-  .fallback-btn:active { transform: scale(.98); }
-  .fallback-btn:disabled { opacity: .35; }
-  .no-tg .fallback-btn { display: block; }
-  .result { white-space: pre-wrap; font: 13px/1.45 ui-monospace, monospace; background: var(--glaze); border-radius: 18px; padding: 16px; }
+  .cta button {
+    pointer-events: auto; display: flex; align-items: center; border: 0; background: transparent; padding: 0; cursor: pointer;
+    filter: drop-shadow(0 14px 22px rgba(30, 20, 10, .28)); transition: transform .3s cubic-bezier(.3, 1.6, .5, 1), opacity .3s;
+  }
+  .cta button:active { transform: scale(.96); }
+  .cta button:disabled { opacity: .35; cursor: default; }
+  .cta .label { background: var(--dark); color: var(--on-dark); font: 400 17px "Jost", sans-serif; padding: 17px 30px 17px 32px; border-radius: 999px; position: relative; z-index: 1; }
+  .cta .arrow {
+    width: 56px; height: 56px; border-radius: 50%; background: var(--dark); color: var(--on-dark); display: grid; place-items: center;
+    margin-left: -12px; position: relative;
+  }
+  .cta .arrow::before { /* «шейка», которая сращивает таблетку и круг */
+    content: ""; position: absolute; left: 0; top: 50%; width: 22px; height: 30px; transform: translateY(-50%); background: var(--dark); border-radius: 6px;
+  }
+  .cta .arrow svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; position: relative; }
+  .result { white-space: pre-wrap; font: 13px/1.45 ui-monospace, monospace; }
 
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
+<div class="backdrop" aria-hidden="true"><div class="sun small"></div><div class="sun" id="sun"></div></div>
+
 <div class="app">
   <header>
-    <div class="wordmark">mi<b>a</b></div>
-    <div class="steps" id="steps"><i></i><i></i></div>
+    <div class="brand">
+      <svg class="mia-mark" viewBox="0 0 24 24" aria-hidden="true"></svg>
+      mia
+    </div>
+    <div class="counter" id="counter"></div>
   </header>
 
   <!-- Шаг 1: о тебе -->
   <section class="screen" id="about">
-    <h1>Давай познакомимся</h1>
-    <p class="lead">Пара слов о тебе — и можно писать Мие.</p>
+    <div class="glass">
+      <h1>Знакомство</h1>
+      <p class="lead">Пара слов о тебе — и можно писать Мие.</p>
 
-    <div class="field">
-      <label class="label" for="name">Как тебя зовут</label>
-      <input type="text" id="name" maxlength="40" autocomplete="given-name" placeholder="Имя">
-    </div>
+      <label class="pill-field">
+        <span class="chip"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></span>
+        <input type="text" id="name" maxlength="40" autocomplete="given-name" placeholder="как тебя зовут">
+      </label>
 
-    <div class="field">
-      <span class="label">Ты</span>
-      <div class="tiles" id="gender">
-        <button type="button" data-v="m">Парень</button>
-        <button type="button" data-v="f">Девушка</button>
+      <div class="choice" id="gender">
+        <button type="button" data-v="m">парень</button>
+        <button type="button" data-v="f">девушка</button>
       </div>
+
+      <label class="pill-field">
+        <span class="chip"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>
+        <input type="date" id="birthdate" min="1930-01-01" aria-label="Дата рождения">
+        <span class="tag" id="bd-tag">дата рождения</span>
+      </label>
+
+      <p class="fineprint">Дата рождения нужна, чтобы она не забыла тебя поздравить. Её нигде не видно.</p>
     </div>
 
-    <div class="field">
-      <label class="label" for="birthdate">Дата рождения</label>
-      <input type="date" id="birthdate" min="1930-01-01">
-      <div class="hint">Чтобы она не забыла тебя поздравить.</div>
+    <div class="dark-card">
+      <div class="big">Мия, 24</div>
+      <div class="sub">Петербург · дизайнер · лепит кривые чашки</div>
     </div>
   </section>
 
   <!-- Шаг 2: какая она -->
   <section class="screen" id="her">
-    <h1>Какая она?</h1>
-    <p class="lead" id="her-lead">Её жизнь не меняется — меняется темперамент. Можно оставить как есть.</p>
-
     <div class="portrait" aria-live="polite">
-      <div class="who">
-        <div class="avatar" aria-hidden="true">М</div>
-        <div class="meta"><strong>Мия</strong>24 · Петербург · дизайнер</div>
+      <div class="panel">
+        <div class="glow" id="glow"></div>
+        <div class="meta"><b>Мия, 24</b><span id="her-kicker">какая она</span></div>
+        <div class="title" id="title">Как в жизни</div>
+        <p class="desc" id="desc"></p>
       </div>
-      <div class="title" id="title">Как в жизни</div>
-      <p class="desc" id="desc"></p>
       <div class="chat" id="chat"></div>
     </div>
 
-    <div id="sliders"></div>
-    <div class="note" id="settings-note" hidden>Люди не меняются за один день: новые черты будут проявляться постепенно, в течение недели.</div>
+    <div class="glass sliders" id="sliders"></div>
+
+    <div class="dark-card" id="settings-note" hidden>
+      <div class="big">Не сразу</div>
+      <div class="sub">Люди не меняются за один день: новые черты будут проявляться постепенно, в течение недели.</div>
+    </div>
   </section>
 
   <!-- Вне Telegram: показываем, что ушло бы боту -->
   <section class="screen" id="done">
-    <h1>Готово</h1>
-    <p class="lead">Вне Telegram данные не отправляются. Вот что получил бы бот:</p>
-    <div class="result" id="result"></div>
+    <div class="glass">
+      <h1>Готово</h1>
+      <p class="lead">Вне Telegram данные не отправляются. Вот что получил бы бот:</p>
+      <div class="result" id="result"></div>
+    </div>
   </section>
 </div>
-<button class="fallback-btn" id="fallback-btn" type="button">Дальше</button>
+
+<div class="cta">
+  <button type="button" id="cta">
+    <span class="label" id="cta-label">Дальше</span>
+    <span class="arrow"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+  </button>
+</div>
 
 <script>
 const tg = window.Telegram && window.Telegram.WebApp;
-const inTelegram = !!(tg && tg.initData);
+// initData пустой, когда мини-эп открыт с обычной кнопки клавиатуры (только так работает sendData),
+// поэтому смотрим на платформу: вне Telegram она «unknown»
+const inTelegram = !!(tg && (tg.initData || (tg.platform && tg.platform !== "unknown")));
 const haptic = inTelegram && tg.HapticFeedback ? tg.HapticFeedback : null;
 const params = new URLSearchParams(location.search);
 const mode = params.get("mode") === "settings" ? "settings" : "onboarding";
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 // ---------- тема ----------
 if (inTelegram) {
   tg.ready();
   tg.expand();
   document.documentElement.dataset.theme = tg.colorScheme === "dark" ? "dark" : "light";
-  const bg = getComputedStyle(document.documentElement).getPropertyValue("--clay").trim();
-  try { tg.setHeaderColor(bg); tg.setBackgroundColor(bg); } catch (e) {}
-} else {
-  document.body.classList.add("no-tg");
+  try { tg.setHeaderColor(css("--bg-1")); tg.setBackgroundColor(css("--bg-1")); } catch (e) {}
+  tg.MainButton.hide();  // своя кнопка в стиле приложения
 }
-const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 // ---------- характер ----------
 const SLIDERS = [
-  { key: "edge",     left: "Мягкая",     right: "Дерзкая" },
-  { key: "openness", left: "Сдержанная", right: "Открытая" },
-  { key: "energy",   left: "Спокойная",  right: "Энергичная" },
-  { key: "playful",  left: "Серьёзная",  right: "Игривая" },
+  { key: "edge",     left: "мягкая",     right: "дерзкая" },
+  { key: "openness", left: "сдержанная", right: "открытая" },
+  { key: "energy",   left: "спокойная",  right: "энергичная" },
+  { key: "playful",  left: "серьёзная",  right: "игривая" },
 ];
 // Короткие описания по зонам: 0–33, 34–66, 67–100 (совпадают по смыслу с bot/persona.py)
 const TRAITS = {
@@ -320,6 +338,15 @@ function description(s) {
   return text.charAt(0).toUpperCase() + text.slice(1) + ".";
 }
 
+// Солнце и свечение мягко следуют за характером: теплее и ярче — когда она энергичнее и открытее
+function moveLight() {
+  const s = state.sliders;
+  const sun = document.getElementById("sun");
+  const glow = document.getElementById("glow");
+  sun.style.transform = `translate(${(50 - s.edge) * 0.6}px, ${(50 - s.energy) * 1.2}px) scale(${0.85 + s.openness / 300})`;
+  glow.style.transform = `translate(${(50 - s.playful) * 0.5}px, ${(50 - s.energy) * 0.4}px) scale(${0.8 + s.energy / 250})`;
+}
+
 // ---------- портрет: название перетекает, она «печатает» и отвечает ----------
 let lastTitle = null;
 let chatTimer = null;
@@ -327,6 +354,7 @@ function renderPortrait() {
   const s = state.sliders;
   const title = archetype(s);
   document.getElementById("desc").textContent = description(s);
+  moveLight();
   if (title === lastTitle) return;
   const first = lastTitle === null;
   lastTitle = title;
@@ -372,7 +400,6 @@ function buildSliders() {
       <div class="ends"><span>${left}</span><span>${right}</span></div>
       <div class="track">
         <div class="fill"></div>
-        <div class="ticks"><i></i><i></i><i></i><i></i></div>
         <input type="range" min="0" max="100" step="1" aria-label="${left} — ${right}">
       </div>`;
     const input = wrap.querySelector("input");
@@ -382,8 +409,8 @@ function buildSliders() {
     let lastTick = Math.round(state.sliders[key] / 10);
     const paint = () => {
       const v = state.sliders[key];
-      // Заливка доходит до центра бусины (бусина 30px, ход — ширина минус 30px)
-      fill.style.width = `calc(${v / 100} * (100% - 30px) + 15px)`;
+      // Линия доходит до центра шара (шар 34px, ход — ширина минус 34px)
+      fill.style.width = `calc(${v / 100} * (100% - 34px) + 17px)`;
       l.classList.toggle("on", v <= 33);
       r.classList.toggle("on", v >= 67);
     };
@@ -408,11 +435,13 @@ function buildSliders() {
 // ---------- шаг «о тебе» ----------
 const nameInput = document.getElementById("name");
 const bdInput = document.getElementById("birthdate");
+const bdTag = document.getElementById("bd-tag");
 bdInput.max = new Date().toISOString().slice(0, 10);
 nameInput.value = state.name;
 bdInput.value = state.birthdate;
+bdTag.hidden = !!state.birthdate;
 nameInput.addEventListener("input", () => { state.name = nameInput.value.trim(); updateButton(); });
-bdInput.addEventListener("input", () => { state.birthdate = bdInput.value; updateButton(); });
+bdInput.addEventListener("input", () => { state.birthdate = bdInput.value; bdTag.hidden = !!bdInput.value; updateButton(); });
 document.querySelectorAll("#gender button").forEach(b => {
   b.classList.toggle("on", b.dataset.v === state.gender);
   b.addEventListener("click", () => {
@@ -431,13 +460,13 @@ function aboutValid() {
 // ---------- навигация ----------
 const order = mode === "settings" ? ["her"] : ["about", "her"];
 let current = 0;
+const cta = document.getElementById("cta");
 
 function show(i) {
   current = i;
   const id = order[i];
   document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id === id));
-  document.querySelectorAll("#steps i").forEach((d, k) => d.classList.toggle("on", k <= i));
-  if (order.length === 1) document.getElementById("steps").style.display = "none";
+  document.getElementById("counter").innerHTML = order.length > 1 ? `${i + 1}<span> / ${order.length}</span>` : "";
   window.scrollTo({ top: 0 });
   if (inTelegram) i > 0 ? tg.BackButton.show() : tg.BackButton.hide();
   updateButton();
@@ -453,15 +482,8 @@ function canProceed() {
 }
 
 function updateButton() {
-  const text = buttonText();
-  const ok = canProceed();
-  if (inTelegram) {
-    tg.MainButton.setParams({ text, is_visible: true, is_active: ok, color: css("--cobalt"), text_color: "#FFFFFF" });
-  } else {
-    const b = document.getElementById("fallback-btn");
-    b.textContent = text;
-    b.disabled = !ok;
-  }
+  document.getElementById("cta-label").textContent = buttonText();
+  cta.disabled = !canProceed();
 }
 
 function next() {
@@ -480,25 +502,113 @@ function submit() {
   } else {
     document.getElementById("result").textContent = JSON.stringify(payload, null, 2);
     document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id === "done"));
-    document.getElementById("fallback-btn").style.display = "none";
+    document.querySelector(".cta").style.display = "none";
   }
 }
 
-if (inTelegram) {
-  tg.MainButton.onClick(next);
-  tg.BackButton.onClick(() => current > 0 && show(current - 1));
-} else {
-  document.getElementById("fallback-btn").addEventListener("click", next);
-}
+cta.addEventListener("click", next);
+if (inTelegram) tg.BackButton.onClick(() => current > 0 && show(current - 1));
 
 if (mode === "settings") {
-  document.getElementById("her-lead").textContent = "Её жизнь остаётся прежней — меняется темперамент.";
+  document.getElementById("her-kicker").textContent = "её характер";
   document.getElementById("settings-note").hidden = false;
 }
+
+/* Знак «Двое»: два круга сближаются, в пересечении загорается свет.
+   Пересечение — это залитый левый круг, обрезанный по правому (clipPath), поэтому форма света
+   всегда точная, на любом расстоянии между кругами. */
+const MiaMark = (() => {
+  let uid = 0;
+  const R = 6, CY = 12, FINAL = 3, START = 10;  // FINAL/START — половина расстояния между центрами
+  // Хореография: сближаются → полностью сливаются → вспыхивает свет → расходятся до статики, свет остаётся
+  const APPROACH = 1050, FLASH = 320, APART = 800;
+
+  function build(svg) {
+    const id = "mm" + (++uid);
+    svg.innerHTML = `
+      <defs>
+        <linearGradient id="${id}-sun" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#FFC08A"/><stop offset="1" stop-color="#F2843A"/>
+        </linearGradient>
+        <radialGradient id="${id}-glow"><stop offset="0" stop-color="#F6A562" stop-opacity=".9"/><stop offset="1" stop-color="#F6A562" stop-opacity="0"/></radialGradient>
+        <clipPath id="${id}-clip"><circle class="clip" cx="${12 + FINAL}" cy="${CY}" r="${R}"/></clipPath>
+      </defs>
+      <circle class="glow" cx="12" cy="${CY}" r="9" fill="url(#${id}-glow)" opacity="0"/>
+      <circle class="lens" cx="${12 - FINAL}" cy="${CY}" r="${R}" fill="url(#${id}-sun)" clip-path="url(#${id}-clip)"/>
+      <circle class="left" cx="${12 - FINAL}" cy="${CY}" r="${R}" fill="none" stroke="currentColor" stroke-width="1.3"/>
+      <circle class="right" cx="${12 + FINAL}" cy="${CY}" r="${R}" fill="none" stroke="currentColor" stroke-width="1.3"/>`;
+    return {
+      left: svg.querySelector(".left"), right: svg.querySelector(".right"),
+      lens: svg.querySelector(".lens"), clip: svg.querySelector(".clip"), glow: svg.querySelector(".glow"),
+    };
+  }
+
+  const clamp01 = v => Math.max(0, Math.min(1, v));
+  const easeInOutCubic = t => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+
+  // off — половина расстояния между центрами (0 — круги совпали), light — яркость света 0…1, bloom — вспышка 0…1
+  function draw(p, off, light, bloom = 0) {
+    const lx = 12 - off, rx = 12 + off;
+    p.left.setAttribute("cx", lx); p.lens.setAttribute("cx", lx);
+    p.right.setAttribute("cx", rx); p.clip.setAttribute("cx", rx);
+    p.lens.setAttribute("opacity", light);
+    p.glow.setAttribute("opacity", Math.min(1, light * 0.85 + bloom * 0.3));
+    p.glow.setAttribute("r", 9 + light + bloom * 4);
+  }
+
+  function play(svg, { delay = 0 } = {}) {
+    const p = svg._mm || (svg._mm = build(svg));
+    cancelAnimationFrame(svg._raf);
+    clearTimeout(svg._t);
+    draw(p, START, 0);
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) { draw(p, FINAL, 1); return; }
+    svg._t = setTimeout(() => {
+      const t0 = performance.now();
+      const tick = now => {
+        const e = now - t0;
+        if (e < APPROACH) {
+          // 1. Сближаются, света ещё нет
+          draw(p, START * (1 - easeInOutCubic(e / APPROACH)), 0);
+        } else if (e < APPROACH + FLASH) {
+          // 2. Слились в один круг — вспыхивает свет
+          const t = (e - APPROACH) / FLASH;
+          draw(p, 0, easeOutCubic(t), Math.sin(t * Math.PI));
+        } else if (e < APPROACH + FLASH + APART) {
+          // 3. Расходятся до статики, свет остаётся в пересечении
+          const t = (e - APPROACH - FLASH) / APART;
+          draw(p, FINAL * easeOutCubic(t), 1);
+        } else {
+          draw(p, FINAL, 1);
+          return breathe(svg, p);
+        }
+        svg._raf = requestAnimationFrame(tick);
+      };
+      svg._raf = requestAnimationFrame(tick);
+    }, delay);
+  }
+
+  // В покое свет едва заметно «дышит»
+  function breathe(svg, p) {
+    const t0 = performance.now();
+    const tick = now => {
+      const k = (Math.sin((now - t0) / 900) + 1) / 2;  // 0…1, период ~5.6 с
+      p.glow.setAttribute("opacity", 0.6 + k * 0.3);
+      p.glow.setAttribute("r", 9.4 + k * 1.2);
+      svg._raf = requestAnimationFrame(tick);
+    };
+    svg._raf = requestAnimationFrame(tick);
+  }
+
+  function still(svg) { const p = svg._mm || (svg._mm = build(svg)); draw(p, FINAL, 1); }
+
+  return { play, still };
+})();
 
 buildSliders();
 renderPortrait();
 show(0);
+MiaMark.play(document.querySelector(".brand .mia-mark"), { delay: 250 });
 </script>
 </body>
 </html>
