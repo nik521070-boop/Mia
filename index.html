@@ -495,6 +495,7 @@ function next() {
 
 function submit() {
   const payload = { mode, sliders: state.sliders };
+  try { payload.tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) {}  // часовой пояс для её распорядка
   if (mode === "onboarding") Object.assign(payload, { name: state.name, gender: state.gender, birthdate: state.birthdate });
   if (inTelegram) {
     haptic && haptic.notificationOccurred("success");
